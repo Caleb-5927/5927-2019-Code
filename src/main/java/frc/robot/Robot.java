@@ -40,27 +40,8 @@ public class Robot extends TimedRobot {
   public static DriveTrain m_driveTrain = new DriveTrain();
   public static HatchGrabber m_hatchGrabber = new HatchGrabber();
   public static Tilt m_tilt = new Tilt();
-  public Joystick buttonMonkey = new Joystick(2);
-  public Joystick leftJoy = new Joystick(0);
-  public Joystick rightJoy = new Joystick(1);
-  public JoystickButton hatchInButton = new JoystickButton(buttonMonkey, 7);
-  public JoystickButton grabHatch = new JoystickButton(buttonMonkey, 9);
-  public JoystickButton cargoRHigh = new JoystickButton(buttonMonkey, 4);
-  public JoystickButton cargoShip = new JoystickButton(buttonMonkey, 3);
-  public JoystickButton cargoRLow = new JoystickButton(buttonMonkey, 1);
-  public JoystickButton armNeutral = new JoystickButton(buttonMonkey, 2);
-  public JoystickButton armNeutral1 = new JoystickButton(buttonMonkey, 6);
-  public JoystickButton resetEncoders = new JoystickButton(buttonMonkey, 8);
-  public JoystickButton outHigh = new JoystickButton(rightJoy, 1);
-  public JoystickButton outLow = new JoystickButton(leftJoy, 1);
   public DigitalInput limit = new DigitalInput(2);
   public Compressor c = new Compressor(0);
-  public JoystickButton unGrabHatch = new JoystickButton(buttonMonkey, 10);
-  public JoystickButton climbButton = new JoystickButton(leftJoy, 5);
-  public JoystickButton armLowerHatch = new JoystickButton(buttonMonkey, 5);
-  public JoystickButton deClimbButton = new JoystickButton(rightJoy, 5);
-  public JoystickButton ClimbDriveButton = new JoystickButton(leftJoy, 2);
-
   Command Drive;
   Command ClimbDrive;
   Command m_autonomousCommand;
@@ -92,7 +73,6 @@ public class Robot extends TimedRobot {
   public void robotPeriodic() {
     c.setClosedLoopControl(true);
     SmartDashboard.putData(m_cargoIntake);
-    resetEncoders.whenPressed(new ArmZero());
     SmartDashboard.putNumber("Encoder: ", m_arm.getEncoder());
     SmartDashboard.putBoolean("Eye: ", m_cargoIntake.getEye());
     SmartDashboard.putData(m_driveTrain);
@@ -102,28 +82,7 @@ public class Robot extends TimedRobot {
     SmartDashboard.putNumber("Error: ", m_arm.getError());
     SmartDashboard.putNumber("Intake Speed: ", m_cargoIntake.getOutput());
     SmartDashboard.putData(m_climber);
-    unGrabHatch.whenPressed(new HatchRelease());
-    hatchInButton.whileHeld(new HatchIn());
     
-    if(buttonMonkey.getPOV() == -1){
-      SmartDashboard.putString("Mode", "Drive");
-      grabHatch.whenPressed(new HatchGrab());
-      unGrabHatch.whenPressed(new HatchRelease());
-      outLow.whileHeld(new CargoOutLow());
-      outHigh.whileHeld(new CargoOutHigh());
-      cargoRHigh.whenPressed(new ArmCargoRocketHigh());
-      cargoRLow.whenPressed(new ArmCargoRocketLow());
-      cargoShip.whenPressed(new ArmCargoShip());
-      armNeutral.whenPressed(new ArmNeutral());
-      armLowerHatch.whenPressed(new ArmHatchLow());
-      armNeutral1.whenPressed(new ArmNeutral());
-    } if(buttonMonkey.getPOV() != -1){
-      SmartDashboard.putString("Mode", "Climb");
-      ClimbDriveButton.whileHeld(new ClimbDrive());
-      c.setClosedLoopControl(false);
-      climbButton.whenPressed(new Climb());
-      deClimbButton.whenPressed(new DeClimb());
-    }
   }
 
   /**
